@@ -27,7 +27,17 @@ export function GET(request) {
 
 }
 
-export function POST() {
+export function POST(request) {
+    const body=request.body
+    console.log(body)
+    console.log(request.method);
+    console.log(request.cookies);
+    console.log(request.headers);
+
+    return NextResponse.json({
+        message: "Posting user data",
+
+    });
 
 }
 
