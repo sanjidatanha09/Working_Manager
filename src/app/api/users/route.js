@@ -27,12 +27,18 @@ export function GET(request) {
 
 }
 
-export function POST(request) {
+export async function POST(request) {
     const body=request.body
     console.log(body)
     console.log(request.method);
-    console.log(request.cookies);
-    console.log(request.headers);
+    // console.log(request.cookies);
+    // console.log(request.headers);
+    // console.log(request.nextUrl.pathname);
+    // const jsonData = await request.json();
+    
+    const textData= await request.text();
+    // console.log(jsonData);
+    console.log(textData);
 
     return NextResponse.json({
         message: "Posting user data",
