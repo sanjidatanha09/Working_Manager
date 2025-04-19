@@ -1,4 +1,6 @@
+import { connectDb } from "@/helper/db";
 import { NextResponse } from "next/server";
+connectDb();
 
 export function GET(request) {
     const users = [
