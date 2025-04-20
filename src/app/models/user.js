@@ -1,21 +1,25 @@
 import mongoose, { Schema } from "mongoose";
 
 const UserSchema = new Schema({
-     
-    name:String,
-    email:{
-        type:String,
-        required:[true,"Email Required !!"],
+    name: {
+        type: String,
+        required: [true, "Name is required!"]
     },
-    password:{
-        type:String,
-        require:[true,"Password required !!"],
+    email: {
+        type: String,
+        unique: true,
+        required: [true, "Email is required!"],
+        match: [/\S+@\S+\.\S+/, "Please enter a valid email address"],
     },
-   about: String,
+    password: {
+        type: String,
+        required: [true, "Password is required!"],
+    },
+    about: String,
     profileURL: String,
-    // password: {
-    //     type: String,
-    //     require: [true, "Password required !!"],
-    // }
-})
-export const User = mongoose.models.users || mongoose.model("users",UserSchema);
+});
+
+// Ensure the unique index is applied
+UserSchema.index({ email: 1 }, { unique: true });
+
+export const User = mongoose.models.User || mongoose.model("User", UserSchema);
