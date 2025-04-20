@@ -1,5 +1,6 @@
 import { connectDb } from "@/helper/db";
 import { NextResponse } from "next/server";
+import {User} from "../../models/user";
 connectDb();
 
 export function GET(request) {
@@ -30,22 +31,44 @@ export function GET(request) {
 }
 
 export async function POST(request) {
-    const body=request.body
-    console.log(body)
-    console.log(request.method);
+    // fetch user details from request
+    const {name,email,password,about,profileURL}=await request.json();
+    console.log({ name, email, password, about, profileURL })
+
+    const user=new User({
+        name, email, password, about, profileURL
+    })
+
+    try{
+        const createUser = await user.save()
+        const response = NextResponse.json(user, {
+            status: 201,
+        });
+        return response;
+    }catch(error){
+        console.log(error)
+        return NextResponse.json({
+            message:"failed to create user!!",
+            status:false,
+        });
+    }
+    
+    // const body=request.body
+    // console.log(body)
+    // console.log(request.method);
     // console.log(request.cookies);
     // console.log(request.headers);
     // console.log(request.nextUrl.pathname);
     // const jsonData = await request.json();
     
-    const textData= await request.text();
+    // const textData= await request.text();
     // console.log(jsonData);
-    console.log(textData);
+    // console.log(textData);
 
-    return NextResponse.json({
-        message: "Posting user data",
+    // return NextResponse.json({
+    //     message: "Posting user data",
 
-    });
+    // });
 
 }
 
