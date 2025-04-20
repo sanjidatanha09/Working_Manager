@@ -3,32 +3,53 @@ import { NextResponse } from "next/server";
 import {User} from "../../models/user";
 connectDb();
 
-export function GET(request) {
-    const users = [
-        {
-            name: 'durgesh tiwari',
-            phone: "2525",
-            course: "java"
+export async function GET(request) {
+    let users={}
+    try{
+        users=await User.find()
 
-        },
-        {
-            name: 'durgesh tiwari1',
-            phone: "2526",
-            course: "next js"
+    }catch(error){
 
-        },
-        {
-            name: 'durgesh tiwari2',
-            phone: "2527",
-            course: "cpp"
+        console.log(error);
+        return NextResponse.json({
+            message:"failed to geet users",
+            success:false,
+        })
 
-        },
-
-    ];
+    }
     return NextResponse.json(users);
 
 
 }
+
+
+
+// export function GET(request) {
+//     const users = [
+//         {
+//             name: 'durgesh tiwari',
+//             phone: "2525",
+//             course: "java"
+
+//         },
+//         {
+//             name: 'durgesh tiwari1',
+//             phone: "2526",
+//             course: "next js"
+
+//         },
+//         {
+//             name: 'durgesh tiwari2',
+//             phone: "2527",
+//             course: "cpp"
+
+//         },
+
+//     ];
+//     return NextResponse.json(users);
+
+
+// }
 
 export async function POST(request) {
     // fetch user details from request
