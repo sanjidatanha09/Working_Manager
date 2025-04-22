@@ -1,21 +1,30 @@
 "use client";
 
 import React, { useState } from "react";
+import { addTask } from "../services/taskService";
 
 const Page = () => {
   const [title, setTitle] = useState("");
   const [comment, setComment] = useState("");
   const [status, setStatus] = useState("pending");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const taskData = { title, comment, status };
-    console.log("Submitted Task:", taskData);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const taskData = { title, comment, status };
+
+  try {
+    const result = await addTask(taskData);
+    console.log("Task added successfully:", result);
+
+    // Reset form
     setTitle("");
     setComment("");
     setStatus("pending");
-  };
-
+  } catch (error) {
+    console.error("Error submitting task:", error.message);
+    // You can show a toast or alert here
+  }
+};
   return (
     <div className="max-w-xl mx-auto p-6 bg-blue-500 rounded shadow mt-10">
       <h1 className="text-2xl font-bold mb-4 text-center">Add Task</h1>
