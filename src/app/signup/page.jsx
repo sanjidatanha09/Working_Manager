@@ -1,14 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
+import axios from "axios"; // ✅ Import axios
 
 const Page = () => {
   const [formData, setFormData] = useState({
-    fullName: "",
-    title: "",
-    description: "",
-    degree: "",
-    gender: "",
+    name: "",
+    email: "",
+    password: "",
+    about: "",
+    profileURL: "",
   });
 
   const handleChange = (e) => {
@@ -19,31 +20,48 @@ const Page = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Submitted:", formData);
-    // You can send formData to your backend/API here
 
-    // Reset form
-    setFormData({
-      fullName: "",
-      title: "",
-      description: "",
-      degree: "",
-      gender: "",
-    });
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/users",
+        formData
+      ); // ✅ API route\
+
+      console.log( response);
+      console.log("User registered successfully:", response.data);
+
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        about: "",
+        profileURL: "",
+      });
+
+      // Optional: show success toast or redirect
+    } catch (error) {
+      console.error(
+        "Error registering user:",
+        error.response?.data || error.message
+      );
+      // Optional: show error toast
+    }
   };
 
   return (
     <div className="max-w-xl mx-auto p-6 bg-blue-400 rounded shadow mt-10">
-      <h1 className="text-2xl font-bold mb-4 text-center">Login / Signup</h1>
+      <h1 className="text-2xl font-bold mb-4 text-center">Register User</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Input fields here (as before) */}
         <div>
           <label className="block font-medium">Full Name</label>
           <input
             type="text"
-            name="fullName"
-            value={formData.fullName}
+            name="name"
+            value={formData.name}
             onChange={handleChange}
             required
             className="w-full border border-gray-300 p-2 rounded mt-1"
@@ -51,11 +69,11 @@ const Page = () => {
         </div>
 
         <div>
-          <label className="block font-medium">Title</label>
+          <label className="block font-medium">Email</label>
           <input
-            type="text"
-            name="title"
-            value={formData.title}
+            type="email"
+            name="email"
+            value={formData.email}
             onChange={handleChange}
             required
             className="w-full border border-gray-300 p-2 rounded mt-1"
@@ -63,10 +81,22 @@ const Page = () => {
         </div>
 
         <div>
-          <label className="block font-medium">Description</label>
+          <label className="block font-medium">Password</label>
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            className="w-full border border-gray-300 p-2 rounded mt-1"
+          />
+        </div>
+
+        <div>
+          <label className="block font-medium">About</label>
           <textarea
-            name="description"
-            value={formData.description}
+            name="about"
+            value={formData.about}
             onChange={handleChange}
             required
             className="w-full border border-gray-300 p-2 rounded mt-1"
@@ -74,31 +104,15 @@ const Page = () => {
         </div>
 
         <div>
-          <label className="block font-medium">Degree</label>
+          <label className="block font-medium">Profile URL</label>
           <input
-            type="text"
-            name="degree"
-            value={formData.degree}
+            type="url"
+            name="profileURL"
+            value={formData.profileURL}
             onChange={handleChange}
             required
             className="w-full border border-gray-300 p-2 rounded mt-1"
           />
-        </div>
-
-        <div>
-          <label className="block font-medium">Gender</label>
-          <select
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-            required
-            className="w-full border border-gray-300 p-2 rounded mt-1"
-          >
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="others">Others</option>
-          </select>
         </div>
 
         <button

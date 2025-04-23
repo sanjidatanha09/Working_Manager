@@ -1,7 +1,7 @@
 // addTask.ts
 import { httpAxios } from "@/helper/httpHelper";
 
-export async function addTask(task) {
-    const result = await httpAxios.post("/api/tasks", task).then((res) => res.data);
+export async function addUser(user) {
+    const result = await httpAxios.post("/api/users", user).then((res) => res.data);
     return result;
 }
