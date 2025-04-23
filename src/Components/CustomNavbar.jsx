@@ -16,7 +16,7 @@ const CustomNavbar = () => {
           <Link href="/show-task">Show Task</Link>
         </div>
         <div className="flex items-center justify-end gap-4 font-bold">
-          <Link href="/login">Login</Link>
+          <Link href="/signup">Login</Link>
         </div>
       </div>
     </nav>
