@@ -24,78 +24,89 @@ export async function GET(request) {
 }
 
 
+// export async function POST(request) {
+//     // fetch user details from request
+//     const {name,email,password,about,profileURL}=await request.json();
+//     console.log({ name, email, password, about, profileURL })
 
-// export function GET(request) {
-//     const users = [
-//         {
-//             name: 'durgesh tiwari',
-//             phone: "2525",
-//             course: "java"
+//     const user=new User({
+//         name, email, password, about, profileURL
+//     })
 
-//         },
-//         {
-//             name: 'durgesh tiwari1',
-//             phone: "2526",
-//             course: "next js"
-
-//         },
-//         {
-//             name: 'durgesh tiwari2',
-//             phone: "2527",
-//             course: "cpp"
-
-//         },
-
-//     ];
-//     return NextResponse.json(users);
-
+//     try{
+//         //SAVE the object to database
+//         user.password = bcrypt.hashSync(user.password, parseInt(process.env.BCRYPT_SALT));
+//         console.log(user);
+//         const createUser = await user.save()
+//         const response = NextResponse.json(user, {
+//             status: 201,
+//         });
+//         return response;
+//     }catch(error){
+//         console.log(error)
+//         return NextResponse.json({
+//             message:"failed to create user!!",
+//             status:false,
+//         });
+//     }
+    
+   
 
 // }
 
 export async function POST(request) {
-    // fetch user details from request
-    const {name,email,password,about,profileURL}=await request.json();
-    console.log({ name, email, password, about, profileURL })
+   
 
-    const user=new User({
-        name, email, password, about, profileURL
-    })
+    const { name, email, password, about, profileURL } = await request.json();
+    console.log({ name, email, password, about, profileURL });
 
-    try{
-        //SAVE the object to database
-        user.password = bcrypt.hashSync(user.password, parseInt(process.env.BCRYPT_SALT));
-        console.log(user);
-        const createUser = await user.save()
-        const response = NextResponse.json(user, {
-            status: 201,
+    try {
+        // 🔍 Check if email already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return NextResponse.json(
+                { message: "Email already exists", status: false },
+                { status: 409 } // 409 = Conflict
+            );
+        }
+
+        // 🔐 Hash password
+        const hashedPassword = bcrypt.hashSync(password, parseInt(process.env.BCRYPT_SALT) || 10);
+
+        const user = new User({
+            name,
+            email,
+            password: hashedPassword,
+            about,
+            profileURL,
         });
-        return response;
-    }catch(error){
-        console.log(error)
-        return NextResponse.json({
-            message:"failed to create user!!",
-            status:false,
-        });
+
+        const createdUser = await user.save();
+
+        return NextResponse.json(
+            {
+                message: "User created successfully",
+                user: {
+                    _id: createdUser._id,
+                    name: createdUser.name,
+                    email: createdUser.email,
+                },
+            },
+            { status: 201 }
+        );
+    } catch (error) {
+        console.error(error);
+        return NextResponse.json(
+            {
+                message: "Failed to create user",
+                status: false,
+                error: error.message,
+            },
+            { status: 500 }
+        );
     }
-    
-    // const body=request.body
-    // console.log(body)
-    // console.log(request.method);
-    // console.log(request.cookies);
-    // console.log(request.headers);
-    // console.log(request.nextUrl.pathname);
-    // const jsonData = await request.json();
-    
-    // const textData= await request.text();
-    // console.log(jsonData);
-    // console.log(textData);
-
-    // return NextResponse.json({
-    //     message: "Posting user data",
-
-    // });
-
 }
+
 
 export function DELETE(request) {
     console.log("delete api called");
