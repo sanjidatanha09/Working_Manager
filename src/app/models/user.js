@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 const UserSchema = new Schema({
     name: {
         type: String,
-        required: [true, "Name is required!"]
+        required: [true, "Name is required!"],
     },
     email: {
         type: String,
@@ -18,8 +18,5 @@ const UserSchema = new Schema({
     about: String,
     profileURL: String,
 });
-
-// Ensure the unique index is applied
-UserSchema.index({ email: 1 }, { unique: true });
 
 export const User = mongoose.models.User || mongoose.model("User", UserSchema);
